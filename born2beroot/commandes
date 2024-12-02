@@ -1,0 +1,330 @@
+------------------------------------------------------------------------------------------------------
+
+ETEINDRE MACHINE VIRTUELLE : sudo poweroff
+
+------------------------------------------------SUDO--------------------------------------------------
+
+- SUDO = "SUBSTITUDE USER DO" = COMMANDE QUI SERT A L'DMIN D'ACCORDER A DES UTILISATEURS DE LANCER DES
+         COMMANDES EN TANT QU'ADMIN.
+
+INSTALLER SUDO : apt install sudo
+
+VOIR LA VERSION SUDO : sudo -V
+
+REBOOT : sudo reboot
+
+------------------------------------------------ROOT--------------------------------------------------
+
+PASSER EN UTILISTEUR ROOT : su
+SORTIR DE L'UTILISATEUR ROOT : exit
+
+-------------------------------------------GROUPS---USERS---------------------------------------------
+
+CREER UTILISATEUR : sudo adduser <user>
+CREER GROUPE : sudo addgroup <group>
+
+VOIR LE GID (GROUP ID) D'UN GROUPE ET SES UTILISATEURS : getent group <group>
+VOIR TOUS LES GROUPES ID (GID) ET LEURS UTILISATEURS : cat /etc/group  OU : nano /etc/group
+
+METTRE UN UTILISATEUR DANS UN GROUPE : sudo adduser <user> <group>
+
+---------------------------------------------MAJ-SYSTEME----------------------------------------------
+
+MISE A JOUR DU SYSTEME : sudo apt update
+
+-------------------------------------------------SSH--------------------------------------------------
+
+- SSH = "SECURE SHELL" = ALTERNATIVE AU PROTOCOLE SHELL NON SECURISE
+        IL UTILISE UNE COMMUNICATION CLIENT-SERVEUR SECURISEE.
+
+INSTALLER SSH : sudo apt  install openssh-server
+
+STATUS DU SHH : sudo service ssh status
+
+--> PORT 4242 :
+
+	CONFIGUARATION DU FICHIER /etc/ssh/sshd_config AVEC nano
+	--> Port 4242
+	--> PermitRootLogin no
+	CONFIGUARATION DU FICHIER /etc/ssh/ssh_config AVEC nano
+	--> Port 4242
+	REDEMARRER LE SERVICE SSH : sudo service ssh restart
+	STATUS MODIFIE DU SERVICE SSH AVEC LE PORT 4242 : sudo service ssh status
+
+-------------------------------------------------UFW--------------------------------------------------
+
+- UFW = PARE-FEU QUI SERT A CONFIGURER iptables
+- IPTABLES = PERMET A UN ADMIN DE CONFIGURER LES REGLES DE FILTRAGE DES PAQUETS IP DU PARE-FEU DE LINUX
+- PAQUET = BLOC DE DONNEES.
+
+INSTALLER UWF : sudo apt install ufw
+
+VERIFIER QUE UFW EST ACTIF : sudo ufw enable
+
+AUTORISER LES CONNEXIONS DEPUIS LE PORT 4242 : sudo ufw allow 4242
+INTERDIRE LES CONNEXIONS DEPUIS UN PORT : sudo ufw delete <numero>
+
+VOIR LE STATUS : sudo ufw status (numbered)
+
+-----------------------------------------CONFIGUARATION-SUDO------------------------------------------
+
+CREATION FICHIER : touch /etc/sudoers.d/sudo_config
+CREATION DOSSIER : mkdir /var/log/sudo
+
+--> DANS /etc/sudoers.d/sudo_config :
+
+	Defaults  passwd_tries=3
+	--> NOMBRE D'ESSAIES POUR SAISIR LE MOT DE PASSE SUDO
+	Defaults  badpass_message="Mensaje de error personalizado"
+	--> MESSAGE AFFICHE QUAND LE MOT N'EST PAS LE BON
+	Defaults  logfile="/var/log/sudo/sudo_config"
+	--> LA OU LES LOGS SERONT STOCKES
+	Defaults  log_input, log_output
+	--> CE QUI SERA ENRIGISTRE
+	Defaults  iolog_dir="/var/log/sudo"
+	--> CE QUI SERA ENREGISTRE
+	Defaults  requiretty
+	--> TTY EST OBLIGATOIRE = 
+	Defaults  secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+	--> DOSSIERS EXCLUS DE SUDO
+
+---------------------------------------POLITIQUE-DE-MOTS-DE-PASSE-------------------------------------
+
+--> FICHIER A MODIFIER : nano /etc/login.defs
+
+	PASS_MAX_DAYS 30
+	--> CHANGEMENT DE MOT DE PASSE APRES 30 JOURS
+	PASS_MIN_DAYS 2
+	--> CHANGEMENT DE MOT DE PASSE PAS AVANT 2 JOURS
+	PASS_WARN_AGE 7 (INCHANGE)
+	--> ALERTE MOT DE PASSE AU BOUT DE 7 JOURS
+
+INSTALLATION DE pwquality : sudo apt install libpam-pwquality
+
+--> MODIFICATION DU FICHIER : nano /etc/pam.d/common-password
+
+	minlen=10
+	--> LONGUEUR MINIMUM DE 10 CARACTERES
+	ucredit=-1
+	--> AU MOINS UNE MAJUSCULE
+	dcredit=-1
+	--> AU MOINS UN CHIFFRE
+	lcredit=-1
+	--> AU MOINS UNE MINUSCULE
+	maxrepeat=3
+	--> IMPOSSIBLE D'AVOIR 3 FOIS LE MEME CARACTERE DE SUITE
+	reject_username
+	--> IMPOSSIBLE DE CONTENIR LE NOM D'UTILISATEUR
+	difok=7
+	--> LE MOT DE PASSE DOIT DIFFERER D'AU MOINS 7 CARACTERES PAR RAPPORT A L'ANCIEN MOT DE PASSE
+	enforce_for_root
+	--> LE ROOT EST AUSSI SOUMIT A CETTE POLITIQUE DE MOTS DE PASSE
+
+POUR VERIFIER LE MOT DE PASSE D'UN UTILISATEUR : sudo chage -l <username>
+
+POUR MODIFIER LES JOURS MINIMUM/MAXIMUM AVANT DE CHANGER DE MOT DE PASSE :
+
+	--> MINIMUM : sudo chage -m <time> <username>
+	--> MAXIMUM : sudo chage -M <time> <username>
+
+---------------------------------------------CONNEXION-VIA-SSH----------------------------------------
+
+ETEINDRE LA VM : sudo poweroff
+
+settings -> network -> advanced -> Port Forwarding -> + -> Host Port = 4242 | Guest Port = 4242
+
+POUR SE CONNECTER VIA SSH DEPUIS LA MACHINE VERS LA VM : ssh <user>@localhost -p 4242
+
+-------------------------------------------------SCENARIO---------------------------------------------
+
+SCRIPT = ENSEMBLE DE COMMANDES DANS UN FICHIER QUI S'EXECUTENT TOUTES QUAND LE FICHIER L'EST.
+
+POUR AFFICHER TOUTES LES PARTIONS/INFORMATIONS SUR TOUS LES PERIPHERIQUES : lsblk
+
+POUR AFFICHER L'ARCHITECTURE DU SO : uname -a   (-a pour --all)
+
+POUR AVOIR LE NOMBRE DE COEURS PHYSIQUES : 
+
+	--> grep "physical id" /proc/cpuinfo | wc -l
+		--> grep : POUR PRENDRE LES LIGNES AVEC "physical id" dans /proc/cpuinfo
+		--> wc -l : POUR COMPTER LE NOMBRE DE LIGNES AFFICHEES PAR grep.
+
+POUR AVOIR LE NOMBRE DE COEURS VIRTUELS : grep processor /proc/cpuinfo | wc -l
+
+POUR AVOIR LA MEMOIRE RAM : 
+
+	--> free --mega | awk '$1 == "Mem:" {print $3}'
+		--> free --mega : POUR AVOIR LES CHIFFRES EN MB
+		--> awk '$1 == "Mem:" {print $3}' : PERMET D'AVOIR LA LIGNE OU LA PREMIERE VALEUR EST "Mem:"
+											ET NOUS DONNE LA TROISIEME VALEUR DE CETTE LIGNE
+
+POUR AVOIR LE POURCENTAGE DE MEMOIRE UTILISE :
+
+	--> free --mega | awk '$1 == "Mem:" {printf("(%.2f%%)\n", $3/$2*100)}'
+	    --> {printf("(%.2f%%)\n", $3/$2*100)} : %.2f POUR AVOIR QUE LES DEUX PREMIERES DECIMALES
+
+POUR AVOIR LA MEMOIRE OCCUPEE DU DISQUE : 
+
+	--> df -m | grep "/dev/" | grep -v "/boot" | awk '{memory_use += $3} END {print memory_use}'
+		--> grep -v : EXCLUE LES LIGNES AVEC /boot
+		--> awk '{memory_use += $3} END {print memory_use}' : ADDITIONNE TOUTES LES MEMOIRES OCCIPEES
+	
+POUR AVOIR LA MEMOIRE TOTALE :
+
+	--> df -m | grep "/dev/" | grep -v "/boot" |
+		awk '{memory_result += $2} END {printf("%.0fGb\n", memory_result/1024)}'
+
+POUR AVOIR LE POURCENTAGE DE MEMOIRE UTILISEE :
+
+	--> df -m | grep "/dev/" | grep -v "/boot" |
+		awk '{use += $3} {total += $2} END {printf("(%d%%)\n", use/total*100)}'
+
+POUR AVOIR LE POURCENTAGE D'UTILISATION DU CPU :
+
+	--> vmstat 1 4 | tail -1 | awk '{printf("%d%%", $15)}'
+		--> vmstat : AFFICHE LES STATISTIQUES SYSTEMES 
+		--> tail -1 : AFFICHE SEULEMENT LA DERNIERE LIGNE
+
+POUR AFFICHER LA DATE ET HEURE DU DERNIER DEMARRAGE DE LA VM :
+
+	--> who -b | awk '$2 == "syst<alt gr 232>me" {print $3 " " $4}'
+		--> who -b : AFFICHE LA DATE ET HEURE DU DERNIER DEMARRAGE
+
+POUR VOIR SI LVM EST ACTIF :
+
+	--> if [ $(lsblk | grep "lvm" | wc -l) -gt 0 ]; then echo yes; else echo no; fi
+		--> echo : ECRIT
+		--> if -> else -> fi (FIN)
+
+POUR AFFICHER LE NOMBRE DE CONNEXIONS TCP
+
+	--> ss -ta | grep ESTAB | wc -l
+		--> ss -ta : AFFICHE SEULEMENT LES CONNEXIONS TCP
+		--> grep ESTAB : ON GARDE CELLES QUI SONT ETABLIENT ET NON QUE EN ECOUTE
+
+POUR AFFIHER LE NOMBRE D'UTILISATEURS PRESENTS
+
+	--> users | wc -w
+		--> users : AFFICHE TOUS LES UTILISATEURS
+		--> wc -w : COMPTE TOUS LES MOTS QUE DONNE users (SOIT LE NOMBRE D'UTILISATEURS)
+
+POUR AFFICHER L'ADRESSE MAC : hostname -I
+
+POUR AFFICHER L'ADRESSE IP :
+
+	--> ip link | grep "link/ether" | awk '{print $2}'
+		--> ip link : AFFICHE LES INTERFACES RESAU
+
+POUR AFFICHER LE NOMBRE DE COMMANDES EXECUTEES AVEC SUDO :
+
+	--> journalctl _COMM=sudo | grep COMMAND | wc -l
+		--> journalctl : AFFICHE TOUT LE JOURNAL SYSTEME
+		--> _COMM=sudo : AFFICHE QUE LES SCRIPTS EXECUTABLES
+
+CREATION : touch monitoring.sh --> script
+
+--------------------------------------------------CRONTAB---------------------------------------------
+
+CRONTAB = GESTIONNAIRE DE PROCESSUS EN ARRIERE-PLAN DANS LE TEMPS
+
+DANS LE FICHIER QU'ON PEUT OUVRIR COMME CA : crontab -u root -e
+
+	--> */10 * * * * sh /home/rlebaill/monitoring.sh
+		--> EXECUTION DE monitoring.sh TOUS LES 10 MINUTES
+
+-------------------------------------------------SIGNATURE--------------------------------------------
+
+ETEINDRE LA VM (LA SIGNATURE CHANGE A CHAQUE DEMARRAGE) : sudo poweroff
+
+POUR AVOIR LA SIGNATURE :
+
+	Ctrl + alt + t --> shasum ../../sgoinfre/goinfre/Perso/rlebaill/Born2beroot/Born2beroot.vdi 
+	
+------------------------------------------------EVALUATION--------------------------------------------
+
+AUCUNE INTERFACE GRAPHIQUE : ls /usr/bin/*session
+
+UFW : sudo ufw status  OU : sudo service ufw status
+
+SSH : sudo service ssh status
+
+DEBIAN : uname -v  OU : uname --kernel-version
+
+rlebaill DANS GROUPE SUDO ET USER42 : getent group sudo/user42
+
+NOUVEL UTILISATEUR : sudo adduser <user>
+
+NOUVEAU GROUPE : sudo addgroup <group>
+
+METTRE L'UTILISATEUR DANS LE GROUPE : sudo adduser <user> <group>
+
+VERIFICATION : sudo getent <group>
+
+MODIFIER LE HOSTNAME : sudo nano /etc/hostname
+                       sudo nano /etc/hosts
+
+REDEMARRAGE : sudo reboot
+
+PARTITIONS : lsblk
+
+SUDO : which sudo  OU : dpkg -s sudo
+
+AJOUTER UN UTILISATEUR DANS LE GROUPE SUDO : sudo adduser <name> sudo
+
+VERIFICATION : getent group sudo
+
+VERIFICATION DES REGLE IMPOSEES PAR LE SUJET : nano /etc/sudoers.d/sudo_config :
+
+	Defaults  passwd_tries=3
+	--> NOMBRE D'ESSAIES POUR SAISIR LE MOT DE PASSE SUDO
+	Defaults  badpass_message="Mot de passe incorrect"
+	--> MESSAGE AFFICHE QUAND LE MOT N'EST PAS LE BON
+	Defaults  logfile="/var/log/sudo/sudo_config"
+	--> LA OU LES LOGS SERONT STOCKES
+	Defaults  log_input, log_output
+	--> CE QUI SERA ENRIGISTRE
+	Defaults  iolog_dir="/var/log/sudo"
+	--> CE QUI SERA ENREGISTRE
+	Defaults  requiretty
+	--> TTY EST OBLIGATOIRE = 
+	Defaults  secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
+	--> DOSSIERS EXCLUS DE SUDO
+
+FICHIER OU IL Y A L'HISTORIQUE DES COMMANDES SUDO : nano /var/log/sudo/sudo_config
+
+PORTS UFW : sudo ufw status numbered
+
+CREEER : sudo ufw allow 8080
+
+SUPPRIMER : sudo ufw delete <numero>
+
+VERIFICATION : sudo ufw status numbered
+
+VERIFICATION SSH 4242 : sudo service ssh status
+
+POUR SE CONNECTER VIA SSH DEPUIS LA MACHINE VERS LA VM : ssh <user>@localhost -p 9090
+
+MODIFIER CRONTAB : sudo crontab -u root -e --> */10 --> */1
+
+ARRETER/DEMARRER CRONTAB : sudo systemctl stop/start cron
+
+VERIFICATION : sudo service cron status
+
+----------------------------------------------DEFINITIONS---------------------------------------------
+
+DEBIAN VS ROCKY
+
+	--> DEBIAN EST PLUS POUR LES PARTICULIERS
+	--> ROCKY PLUS POUR LES ENTREPRISES
+
+APT VS APTITUDE :
+
+	--> APT : LIGNE DE COMMANDE /\ APTITUDE : INTERFACE VISUELLE
+	--> APT : EN CAS DE CONFLIT, APT NE FAIT RIEN ALORS QUE APTITUDE PROPOSERA UNE SOLUTIONS
+
+APPARMOR :
+
+	--> ALTERNATIVE A SELINUX, IL PERMET DE RESTREINDRE L'ACCES AU SYSTEME D'EXPLOITATION GRACE A DES
+		PROFILS DE SECURITE
+
+------------------------------------------------------------------------------------------------------
