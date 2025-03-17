@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   easyfind.hpp                                       :+:      :+:    :+:   */
+/*   iter.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rlebaill <rlebaill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/26 21:09:41 by romain            #+#    #+#             */
-/*   Updated: 2025/02/27 16:02:45 by rlebaill         ###   ########.fr       */
+/*   Created: 2025/02/26 16:24:46 by rlebaill          #+#    #+#             */
+/*   Updated: 2025/02/26 16:32:32 by rlebaill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,25 +21,14 @@
 #define CYAN    "\033[36m"
 #define WHITE   "\033[37m"
 
-#include <algorithm>
 #include <iostream>
 
-class NotFoundException: public std::exception
+template <typename T>
+void	iter(T *array, size_t len, void (*ft)(T &))
 {
-	public:
-
-		virtual const char *what() const throw()
-		{
-			return ("not found !!!");
-		}
-};
-
-template<typename T>
-typename T::iterator easyfind(T &in, int i)
-{
-	typename T::iterator	it;
-	it = find(in.begin(), in.end(), i);
-	if (it == in.end())
-		throw NotFoundException();
-	return (it);
+	if (array)
+	{
+		for (size_t i = 0; i < len; i++)
+			ft(array[i]);
+	}
 }

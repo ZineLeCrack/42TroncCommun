@@ -6,12 +6,12 @@
 /*   By: rlebaill <rlebaill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 09:21:59 by rlebaill          #+#    #+#             */
-/*   Updated: 2025/02/25 12:38:14 by rlebaill         ###   ########.fr       */
+/*   Updated: 2025/02/25 12:38:34 by rlebaill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bureaucrat.hpp"
-#include "Form.hpp"
+#include "AForm.hpp"
 
 Bureaucrat::Bureaucrat(): _name("undefinied"), _grade(150)
 {
@@ -98,7 +98,14 @@ void	Bureaucrat::decrementGrade()
 	this->setGrade(this->_grade + 1);
 }
 
-void	Bureaucrat::signForm(Form &form)
+void	Bureaucrat::executeForm(AForm const & form)
+{
+	form.execute(*this);
+	std::cout << "\033[32m" << this->getName() << " executed "
+	<< form.getName() << "\033[0m" << std::endl;
+}
+
+void	Bureaucrat::signForm(AForm &form)
 {
 	form.beSigned(*this);
 	return ;

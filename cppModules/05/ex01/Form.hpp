@@ -6,7 +6,7 @@
 /*   By: rlebaill <rlebaill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 11:01:54 by rlebaill          #+#    #+#             */
-/*   Updated: 2025/02/21 13:37:26 by rlebaill         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:08:56 by rlebaill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,10 @@ class Form
 
 		const std::string getName(void)const;
 		bool getIsSignedBool(void)const;
-		const int getSignGrade(void)const;
-		const int getExecGrade(void)const;
+		int getSignGrade(void)const;
+		int getExecGrade(void)const;
 
 		void 	beSigned(Bureaucrat &bureaucrat);
-		void	signForm();
 
 		class GradeTooLowException : public std::exception
 		{

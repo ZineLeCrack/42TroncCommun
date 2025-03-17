@@ -1,4 +1,4 @@
-NAME = ex00
+NAME = templates
 
 SRCS = main.cpp
 
@@ -7,19 +7,19 @@ CC = c++ -Wall -Wextra -Werror -std=c++98
 OBJS = $(SRCS:.cpp=.o)
 
 %.o: %.cpp
-	$(CC) -c $< -o $@
+		$(CC) -c $< -o $@
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(OBJS) -o $(NAME)
-	@echo "Compilation complete !"
+		$(CC) $(OBJS) -o $(NAME)
+		@echo "Compilation complete !"
 
 clean:
-	rm -rf $(OBJS)
+		rm -rf $(OBJS)
 
 fclean: clean
-	rm -rf $(NAME)
+		rm -rf $(NAME)
 
 re: fclean all
 

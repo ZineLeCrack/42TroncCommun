@@ -1,4 +1,4 @@
-NAME = ex00
+NAME = RPN
 
 SRCS = main.cpp
 

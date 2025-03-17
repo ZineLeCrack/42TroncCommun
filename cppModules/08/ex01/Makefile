@@ -1,6 +1,6 @@
-NAME = ex00
+NAME = ex01
 
-SRCS = main.cpp
+SRCS = Span.cpp main.cpp
 
 CC = c++ -Wall -Wextra -Werror -std=c++98
 

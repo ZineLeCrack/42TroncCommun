@@ -1,6 +1,7 @@
-NAME = ex00
+NAME = bureaucrat
 
-SRCS = main.cpp
+SRCS = Bureaucrat.cpp AForm.cpp ShrubberyCreationForm.cpp RobotomyRequestForm.cpp \
+	   PresidentialPardonForm.cpp Intern.cpp main.cpp
 
 CC = c++ -Wall -Wextra -Werror -std=c++98
 
@@ -20,6 +21,7 @@ clean:
 
 fclean: clean
 	rm -rf $(NAME)
+	rm -rf home_shrubbery
 
 re: fclean all
 

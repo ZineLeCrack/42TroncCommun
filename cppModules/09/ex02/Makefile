@@ -1,6 +1,6 @@
-NAME = ex00
+NAME = PmergeMe
 
-SRCS = main.cpp
+SRCS = PmergeMe.cpp main.cpp
 
 CC = c++ -Wall -Wextra -Werror -std=c++98
 

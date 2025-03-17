@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   easyfind.hpp                                       :+:      :+:    :+:   */
+/*   Span.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rlebaill <rlebaill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/26 21:09:41 by romain            #+#    #+#             */
-/*   Updated: 2025/02/27 16:02:45 by rlebaill         ###   ########.fr       */
+/*   Created: 2025/02/27 10:27:08 by rlebaill          #+#    #+#             */
+/*   Updated: 2025/02/27 12:01:59 by rlebaill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,25 +21,41 @@
 #define CYAN    "\033[36m"
 #define WHITE   "\033[37m"
 
-#include <algorithm>
+#include <iterator>
+#include <set>
 #include <iostream>
 
-class NotFoundException: public std::exception
+class Span
 {
+	private:
+
+		unsigned int	_N;
+		unsigned int	_i;
+		int				*_lst;
+
+		Span();
+
 	public:
 
-		virtual const char *what() const throw()
-		{
-			return ("not found !!!");
-		}
-};
+		Span(unsigned int N);
+		Span(Span const &copy);
+		~Span();
 
-template<typename T>
-typename T::iterator easyfind(T &in, int i)
-{
-	typename T::iterator	it;
-	it = find(in.begin(), in.end(), i);
-	if (it == in.end())
-		throw NotFoundException();
-	return (it);
-}
+		Span	&operator=(Span const &src);
+
+		void	addNumber(int n);
+		int		shortestSpan();
+		int		longestSpan();
+
+		class SpanIsFullException: public std::exception
+		{
+			public:
+				virtual const char	*what() const throw();
+		};
+
+		class NotEnoughElementInSpan: public std::exception
+		{
+			public:
+				virtual const char	*what() const throw();
+		};
+};

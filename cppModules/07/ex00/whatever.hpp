@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   easyfind.hpp                                       :+:      :+:    :+:   */
+/*   whatever.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rlebaill <rlebaill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/26 21:09:41 by romain            #+#    #+#             */
-/*   Updated: 2025/02/27 16:02:45 by rlebaill         ###   ########.fr       */
+/*   Created: 2025/02/26 15:39:50 by rlebaill          #+#    #+#             */
+/*   Updated: 2025/02/26 16:04:25 by rlebaill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,25 +21,20 @@
 #define CYAN    "\033[36m"
 #define WHITE   "\033[37m"
 
-#include <algorithm>
-#include <iostream>
-
-class NotFoundException: public std::exception
+template <typename T>
+void	swap(T &a, T &b)
 {
-	public:
-
-		virtual const char *what() const throw()
-		{
-			return ("not found !!!");
-		}
-};
-
-template<typename T>
-typename T::iterator easyfind(T &in, int i)
+	T tmp = a;
+	a = b;
+	b = tmp;
+}
+template <typename T>
+T		min(T &a, T &b)
 {
-	typename T::iterator	it;
-	it = find(in.begin(), in.end(), i);
-	if (it == in.end())
-		throw NotFoundException();
-	return (it);
+	return ((a < b) ? a: b);
+}
+template <typename T>
+T		max(T &a, T &b)
+{
+	return ((a > b) ? a: b);
 }

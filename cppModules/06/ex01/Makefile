@@ -1,8 +1,8 @@
-NAME = ex00
+NAME = convert
 
-SRCS = main.cpp
+SRCS = Serializer.cpp main.cpp
 
-CC = c++ -Wall -Wextra -Werror -std=c++98
+CC = c++ -Wall -Wextra -Werror -std=c++98 -std=c++11
 
 OBJS = $(SRCS:.cpp=.o)
 

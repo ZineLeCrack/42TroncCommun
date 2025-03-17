@@ -1,6 +1,6 @@
-NAME = ex00
+NAME = convert
 
-SRCS = main.cpp
+SRCS = ScalarConverter.cpp main.cpp
 
 CC = c++ -Wall -Wextra -Werror -std=c++98
 

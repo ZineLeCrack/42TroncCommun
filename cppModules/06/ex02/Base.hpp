@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   easyfind.hpp                                       :+:      :+:    :+:   */
+/*   Base.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rlebaill <rlebaill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/26 21:09:41 by romain            #+#    #+#             */
-/*   Updated: 2025/02/27 16:02:45 by rlebaill         ###   ########.fr       */
+/*   Created: 2025/02/26 11:08:15 by rlebaill          #+#    #+#             */
+/*   Updated: 2025/02/26 12:35:16 by rlebaill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,25 +21,9 @@
 #define CYAN    "\033[36m"
 #define WHITE   "\033[37m"
 
-#include <algorithm>
-#include <iostream>
-
-class NotFoundException: public std::exception
+class Base
 {
 	public:
 
-		virtual const char *what() const throw()
-		{
-			return ("not found !!!");
-		}
+		virtual ~Base() {}
 };
-
-template<typename T>
-typename T::iterator easyfind(T &in, int i)
-{
-	typename T::iterator	it;
-	it = find(in.begin(), in.end(), i);
-	if (it == in.end())
-		throw NotFoundException();
-	return (it);
-}

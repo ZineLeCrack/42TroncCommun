@@ -6,7 +6,7 @@
 /*   By: rlebaill <rlebaill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 09:21:59 by rlebaill          #+#    #+#             */
-/*   Updated: 2025/02/21 10:59:18 by rlebaill         ###   ########.fr       */
+/*   Updated: 2025/02/25 12:37:54 by rlebaill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,12 @@ Bureaucrat &Bureaucrat::operator=(const Bureaucrat &src)
 const char *Bureaucrat::GradeTooHighException::what() const throw()
 {
 	return ("Grade too high !!!");
-};
+}
 
 const char *Bureaucrat::GradeTooLowException::what() const throw()
 {
 	return ("Grade too low !!!");
-};
+}
 
 const std::string	Bureaucrat::getName()const
 {

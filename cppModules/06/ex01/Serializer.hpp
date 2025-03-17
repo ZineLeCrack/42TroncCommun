@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   easyfind.hpp                                       :+:      :+:    :+:   */
+/*   Serializer.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rlebaill <rlebaill@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/26 21:09:41 by romain            #+#    #+#             */
-/*   Updated: 2025/02/27 16:02:45 by rlebaill         ###   ########.fr       */
+/*   Created: 2025/02/26 10:24:28 by rlebaill          #+#    #+#             */
+/*   Updated: 2025/02/26 11:14:35 by rlebaill         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,26 +20,28 @@
 #define MAGENTA "\033[35m"
 #define CYAN    "\033[36m"
 #define WHITE   "\033[37m"
-
-#include <algorithm>
 #include <iostream>
+#include <cstdint>
 
-class NotFoundException: public std::exception
+struct Data
 {
-	public:
-
-		virtual const char *what() const throw()
-		{
-			return ("not found !!!");
-		}
+	int			id;
+	std::string	name;
 };
 
-template<typename T>
-typename T::iterator easyfind(T &in, int i)
+class Serializer
 {
-	typename T::iterator	it;
-	it = find(in.begin(), in.end(), i);
-	if (it == in.end())
-		throw NotFoundException();
-	return (it);
-}
+	private:
+
+		Serializer();
+		Serializer(Serializer const &copy);
+
+	public:
+
+		~Serializer();
+
+		Serializer &operator=(Serializer const &src);
+
+		static uintptr_t	serialize(Data* ptr);
+		static Data*		deserialize(uintptr_t raw);
+};
